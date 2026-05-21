@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trần Thị Trà Giang - Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #ecf0f1 0%, #ffffff 100%);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 60px 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 40px rgba(30, 58, 138, 0.3);
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            margin-bottom: 25px;
+        }
+
+        .header-contact {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+        }
+
+        .header-contact span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2.2em;
+            color: #1e3a8a;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3b82f6;
+            display: inline-block;
+        }
+
+        .about-container {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .about-image {
+            flex: 0 0 220px;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.2);
+            object-fit: cover;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 5px solid #3b82f6;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .about-text p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .about-text strong {
+            color: #1e3a8a;
+        }
+
+        .about-text ul {
+            margin: 15px 0 0 25px;
+        }
+
+        .about-text li {
+            margin-bottom: 12px;
+            color: #555;
+        }
+
+        /* ===== SKILLS SECTION ===== */
+        .skills-section {
+            margin-bottom: 60px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .skill-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-top: 4px solid #3b82f6;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(30, 58, 138, 0.2);
+        }
+
+        .skill-icon {
+            font-size: 2.5em;
+            color: #3b82f6;
+            margin-bottom: 12px;
+        }
+
+        .skill-card h3 {
+            font-size: 1.1em;
+            color: #1e3a8a;
+            margin-bottom: 8px;
+        }
+
+        .skill-card p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* ===== PROJECTS SECTION ===== */
+        .projects-section {
+            margin-bottom: 60px;
+        }
+
+        .projects-grid {
+            display: grid;
+            gap: 25px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            border-left: 5px solid #3b82f6;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(30, 58, 138, 0.2);
+        }
+
+        .project-card h3 {
+            font-size: 1.4em;
+            color: #1e3a8a;
+            margin-bottom: 12px;
+        }
+
+        .project-card p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            background: #f0f9ff;
+            color: #1e3a8a;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            border: 1px solid #3b82f6;
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact-section {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 50px 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(30, 58, 138, 0.3);
+            margin-bottom: 50px;
+        }
+
+        .contact-section h2 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 15px;
+        }
+
+        .contact-section p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #999;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .header-contact {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .section-title {
+                font-size: 1.8em;
+            }
+
+            .about-container {
+                flex-direction: column;
+                gap: 25px;
+            }
+
+            .about-image {
+                flex: 0 0 100%;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .contact-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <h1>Trần Thị Trà Giang</h1>
+            <p class="subtitle">Sinh viên <strong>Công nghệ Thông tin & Chuyển đổi số</strong></p>
+            
+            <div class="header-contact">
+                <span><i class="fas fa-envelope"></i> giangttt.yec25@gmail.com</span>
+                <span><i class="fas fa-phone"></i> 0911 686 772</span>
+            </div>
+
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/tra-giang-tran-thi-30537839b" target="_blank">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="https://www.facebook.com/trantragiang0315" target="_blank">
+                    <i class="fab fa-facebook"></i> Facebook
+                </a>
+            </div>
+        </header>
+
+        <!-- ABOUT -->
+        <section class="about-section">
+            <h2 class="section-title">Về tôi</h2>
+            <div class="about-container">
+                <div class="about-image">
+                    <img src="avatar.jpg" alt="Trần Thị Trà Giang">
+                </div>
+                <div class="about-text">
+                    <p><strong>Sinh viên năm nhất</strong> ngành Công nghệ thông tin & Chuyển đổi số hệ Chất lượng cao tại NEU. Có kinh nghiệm làm việc nhóm, thuyết trình, truyền thông và đối ngoại. Đam mê học hỏi và phát triển kỹ năng mềm.</p>
+                    
+                    <p style="margin-top: 20px;"><strong>Kinh nghiệm nổi bật:</strong></p>
+                    <ul>
+                        <li>Thành viên ban Truyền thông thuộc CLB Nhà Kinh Tế Trẻ (YEC-NEU) thế hệ thứ 25</li>
+                        <li>Cựu học sinh trường THPT Chuyên Hà Tĩnh lớp chuyên Văn</li>
+                        <li>Trưởng ban Đối ngoại CLB tại trường cấp III</li>
+                        <li>Trưởng ban tổ sự kiện từ thiện phạm vi tỉnh Hà Tĩnh</li>
+                        <li>6 năm liền đạt giải Học Sinh Giỏi cấp tỉnh môn Ngữ Văn</li>
+                        <li>Tham gia nhiều hoạt động ngoại khóa khác</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section class="skills-section">
+            <h2 class="section-title">Kỹ năng</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon"><i class="fas fa-users"></i></div>
+                    <h3>Teamwork</h3>
+                    <p>Làm việc nhóm hiệu quả</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon"><i class="fas fa-search"></i></div>
+                    <h3>Research</h3>
+                    <p>Tìm kiếm & phân tích thông tin</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon"><i class="fas fa-pencil-ruler"></i></div>
+                    <h3>Design</h3>
+                    <p>Thiết kế & bố cục</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon"><i class="fas fa-share-alt"></i></div>
+                    <h3>Social Media</h3>
+                    <p>Quản lý truyền thông xã hội</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h3>Kỹ năng mềm</h3>
+                    <p>Thuyết trình & giao tiếp</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section class="projects-section">
+            <h2 class="section-title">Dự án & Hoạt động</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3><i class="fas fa-star"></i> CLB Nhà Kinh Tế Trẻ (YEC-NEU)</h3>
+                    <p>Thành viên ban Truyền thông, đóng góp vào các hoạt động nâng cao nhận thức kinh tế, phát triển kỹ năng mềm cho sinh viên NEU.</p>
+                    <div class="tags">
+                        <span class="tag">Truyền thông</span>
+                        <span class="tag">Marketing</span>
+                        <span class="tag">Sự kiện</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <h3><i class="fas fa-heart"></i> Ban tổ sự kiện từ thiện</h3>
+                    <p>Trưởng ban tổ chức sự kiện từ thiện phạm vi tỉnh Hà Tĩnh, lên kế hoạch và triển khai các hoạt động ý nghĩa vì cộng đồng.</p>
+                    <div class="tags">
+                        <span class="tag">Lãnh đạo</span>
+                        <span class="tag">Tổ chức sự kiện</span>
+                        <span class="tag">Cộng đồng</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <h3><i class="fas fa-award"></i> Học Sinh Giỏi</h3>
+                    <p>Đạt giải Học Sinh Giỏi cấp tỉnh môn Ngữ Văn 6 năm liền (từ lớp 7 đến lớp 12), chứng minh niềm đam mê với ngôn ngữ và văn học.</p>
+                    <div class="tags">
+                        <span class="tag">Ngữ Văn</span>
+                        <span class="tag">Học tập</span>
+                        <span class="tag">Chuyên Hà Tĩnh</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section class="contact-section">
+            <h2>Liên hệ với tôi</h2>
+            <p>Tôi luôn sẵn sàng lắng nghe! Hãy liên hệ qua email hoặc mạng xã hội.</p>
+            <div class="contact-links">
+                <a href="mailto:giangttt.yec25@gmail.com" class="contact-link">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+                <a href="https://www.linkedin.com/in/tra-giang-tran-thi-30537839b" target="_blank" class="contact-link">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="https://www.facebook.com/trantragiang0315" target="_blank" class="contact-link">
+                    <i class="fab fa-facebook"></i> Facebook
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Trần Thị Trà Giang. Tất cả quyền được bảo lưu.</p>
+    </footer>
+</body>
+</html>
