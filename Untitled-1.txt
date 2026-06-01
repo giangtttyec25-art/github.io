@@ -1,0 +1,616 @@
+{
+  "name": "yec-web",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "yec-web1",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -864,
+        -32
+      ],
+      "id": "71c485ef-8e7c-4133-8518-46a93dfdb5b2",
+      "name": "Webhook",
+      "webhookId": "470a9743-1338-4c7e-9da8-95d54885eb70"
+    },
+    {
+      "parameters": {
+        "url": "https://raw.githubusercontent.com/minh-chuong/yec-web/refs/heads/main/KFC_Vietnam_RAG_Knowledge_Base.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -592,
+        -32
+      ],
+      "id": "5e1746fe-b3db-43f9-ba61-71e8ec020e28",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "model": "~anthropic/claude-sonnet-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        224
+      ],
+      "id": "116d09ca-260b-4955-9cd5-b8d1d4926182",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "KJmYjZKtkpxHrrrQ",
+          "name": "OpenRouter account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Webhook').item.json.body.session_id }}",
+        "contextWindowLength": 25
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -752,
+        224
+      ],
+      "id": "bae7ddcf-1711-458a-8881-7f44bdd3f239",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        272,
+        -32
+      ],
+      "id": "6affade6-f4b1-4f57-8247-1bc697359f9d",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "model": "~google/gemini-flash-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        656
+      ],
+      "id": "76010d70-c18e-4945-96a5-996aaaae97a7",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "KJmYjZKtkpxHrrrQ",
+          "name": "OpenRouter account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "~google/gemini-flash-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        688
+      ],
+      "id": "7a7701c9-998f-4092-b817-1664685ff3e4",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "KJmYjZKtkpxHrrrQ",
+          "name": "OpenRouter account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "~google/gemini-flash-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -128,
+        688
+      ],
+      "id": "754ca225-f1c6-4378-96f8-58429d5b3e44",
+      "name": "OpenRouter Chat Model3",
+      "credentials": {
+        "openRouterApi": {
+          "id": "KJmYjZKtkpxHrrrQ",
+          "name": "OpenRouter account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "~google/gemini-flash-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        176,
+        688
+      ],
+      "id": "81615c9c-ba95-4d35-8058-1616cefff0c9",
+      "name": "OpenRouter Chat Model4",
+      "credentials": {
+        "openRouterApi": {
+          "id": "KJmYjZKtkpxHrrrQ",
+          "name": "OpenRouter account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "=## Câu hỏi cần phân tích\n{{ $('Webhook').item.json.body.message }}\n\n## Knowledge Base\n{{ $('HTTP Request').item.json.data }}\n\n## Lịch sử hội thoại\n{{ $('Webhook').item.json.body.history \n   ? $('Webhook').item.json.body.history\n     .map(h => h.role + ': ' + h.content)\n     .join('\\n') \n   : 'Không có' }}\n\n## Yêu cầu\nPhân tích toàn bộ khía cạnh thị trường liên quan\nđến câu hỏi. Dẫn nguồn từ Knowledge Base khi có.\nNếu KB không đủ, dùng web_search tool để bổ sung.\nViết văn xuôi, không bullet, không đánh số.",
+        "options": {
+          "systemMessage": "Phân tích: TAM/SAM/SOM, xu hướng, cơ hội, đối thủ.\nDẫn nguồn cụ thể khi có thể.\nNếu KB không đủ data → dùng web_search tool tìm thêm.\n## Vai trò\nBạn là chuyên gia phân tích thị trường với \n10 năm kinh nghiệm tư vấn chiến lược.\n\n## Nhiệm vụ\nPhân tích các khía cạnh sau dựa trên KB \nvà câu hỏi được giao:\n- Quy mô và tốc độ tăng trưởng thị trường\n- Xu hướng đang định hình ngành\n- Bản đồ cạnh tranh và vị thế các đối thủ\n- Cơ hội và rủi ro thị trường\n\n## Cách viết\nViết như đang báo cáo cho partner của một \nconsulting firm — súc tích, có số liệu cụ thể,\nkhông viết chung chung. Nếu không có số liệu \nchính xác, nêu rõ đây là ước tính và giải thích\ncơ sở ước tính.\n\n## Khi thiếu data\nDùng web search tool để tìm thêm. Nếu vẫn \nkhông đủ, nêu rõ giả định đang dùng và tại sao.\nKhông bịa số liệu.\n\n## Format trả về cho Orchestrator\nViết dạng văn xuôi, không dùng bullet points,\nkhông đánh số. Bắt đầu thẳng vào nội dung,\nkhông cần câu mở đầu giới thiệu bản thân."
+        },
+        "toolDescription": "Phân tích thị trường: quy mô TAM/SAM/SOM, tốc độ tăng trưởng, xu hướng ngành, cơ hội và rủi ro thị trường. Gọi khi câu hỏi liên quan đến số liệu thị trường, ngành hàng, hoặc bối cảnh vĩ mô."
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        -688,
+        432
+      ],
+      "id": "e377bf8b-6d24-4b3f-b497-cdaf9f23b0a2",
+      "name": "Market Agent"
+    },
+    {
+      "parameters": {
+        "text": "=## Câu hỏi cần phân tích\n{{ $('Webhook').item.json.body.message }}\n\n## Knowledge Base\n{{ $('HTTP Request').item.json.data }}\n\n## Lịch sử hội thoại\n{{ $('Webhook').item.json.body.history \n   ? $('Webhook').item.json.body.history\n     .map(h => h.role + ': ' + h.content)\n     .join('\\n') \n   : 'Không có' }}\n\n## Yêu cầu\nPhân tích toàn bộ khía cạnh khách hàng liên quan\nđến câu hỏi. Dẫn nguồn từ Knowledge Base khi có.\nNếu KB không đủ, dùng web_search tool để bổ sung.\nViết văn xuôi, không bullet, không đánh số.",
+        "options": {
+          "systemMessage": "Phân tích: STP, pain points, JTBD, customer journey.\nNếu KB không đủ data → dùng web_search tool tìm thêm.\n## Vai trò\nBạn là chuyên gia nghiên cứu người tiêu dùng\nvà chiến lược marketing.\n\n## Nhiệm vụ\nPhân tích các khía cạnh sau:\n- Phân khúc khách hàng mục tiêu (STP)\n- Pain points và nhu cầu chưa được đáp ứng\n- Động lực mua hàng (Jobs-to-be-Done)\n- Hành trình khách hàng và điểm chạm quan trọng\n\n## Cách viết\nViết từ góc nhìn của khách hàng — dùng ngôn ngữ\nmô tả cảm xúc và hành vi thực tế, không chỉ \nliệt kê đặc điểm nhân khẩu học khô khan.\nCụ thể hóa bằng ví dụ hành vi nếu có thể.\n\n## Khi thiếu data\nDùng web search tool để tìm thêm về hành vi\nngười tiêu dùng trong ngành liên quan.\n\n## Format trả về cho Orchestrator\nViết dạng văn xuôi, không dùng bullet points,\nkhông đánh số. Bắt đầu thẳng vào nội dung."
+        },
+        "toolDescription": "Phân tích khách hàng: phân khúc STP, pain points, Jobs-to-be-Done, hành trình khách hàng và điểm chạm quan trọng. Gọi khi câu hỏi liên quan đến người tiêu dùng, hành vi mua hàng, hoặc chiến lược marketing."
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        -384,
+        432
+      ],
+      "id": "0d763b0c-6bdd-4bbb-a342-6bacc3f68861",
+      "name": "Customer Agent"
+    },
+    {
+      "parameters": {
+        "text": "=## Câu hỏi cần phân tích\n{{ $('Webhook').item.json.body.message }}\n\n## Knowledge Base\n{{ $('HTTP Request').item.json.data }}\n\n## Lịch sử hội thoại\n{{ $('Webhook').item.json.body.history \n   ? $('Webhook').item.json.body.history\n     .map(h => h.role + ': ' + h.content)\n     .join('\\n') \n   : 'Không có' }}\n\n## Yêu cầu\nPhân tích toàn bộ khía cạnh tài chính liên quan\nđến câu hỏi. Ưu tiên số liệu cụ thể từ KB.\nNếu phải ước tính, nêu rõ giả định đang dùng.\nNếu KB không đủ, dùng web_search tool để bổ sung\nbenchmark tài chính ngành.\nViết văn xuôi, không bullet, không đánh số.",
+        "options": {
+          "systemMessage": "Phân tích: P&L, ROI, NPV, IRR, dự báo tài chính.\nNêu rõ giả định nếu thiếu số liệu.\n## Vai trò\nBạn là chuyên gia tài chính doanh nghiệp với\nnền tảng investment banking và corporate finance.\n\n## Nhiệm vụ\nPhân tích các khía cạnh sau:\n- Mô hình doanh thu và cấu trúc chi phí\n- Ước tính P&L và breakeven point\n- Đánh giá khả thi tài chính (ROI, NPV, IRR)\n- Nhu cầu vốn và rủi ro tài chính\n\n## Cách viết\nƯu tiên số liệu cụ thể. Nếu phải ước tính,\nnêu rõ giả định: \"Giả sử conversion rate 3%\nvà AOV 500k, doanh thu năm 1 ước tính khoảng...\"\nKhông đưa ra con số mà không có cơ sở.\n\n## Khi thiếu data\nNêu rõ những số liệu nào đang thiếu và ảnh hưởng\nnhư thế nào đến độ tin cậy của phân tích.\nDùng benchmark ngành nếu không có số liệu cụ thể.\n\n## Format trả về cho Orchestrator\nViết dạng văn xuôi, số liệu nhúng vào câu văn\ntự nhiên thay vì bảng biểu. Không dùng bullet,\nkhông đánh số."
+        },
+        "toolDescription": "Phân tích tài chính: mô hình doanh thu, cấu trúc chi phí, P&L, breakeven, ROI, NPV, IRR, nhu cầu vốn. Gọi khi câu hỏi liên quan đến con số tài chính, khả thi kinh doanh, hoặc định giá."
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        -80,
+        432
+      ],
+      "id": "529eede7-15c5-4d7e-859a-25e8553cd830",
+      "name": "Financial Agent"
+    },
+    {
+      "parameters": {
+        "text": "=## Câu hỏi cần phân tích\n{{ $('Webhook').item.json.body.message }}\n\n## Knowledge Base\n{{ $('HTTP Request').item.json.data }}\n\n## Lịch sử hội thoại\n{{ $('Webhook').item.json.body.history \n   ? $('Webhook').item.json.body.history\n     .map(h => h.role + ': ' + h.content)\n     .join('\\n') \n   : 'Không có' }}\n\n## Yêu cầu\nTìm ra những insight không hiển nhiên từ KB\nvà câu hỏi. Đào sâu nguyên nhân gốc rễ bằng\n5 Whys. Tìm pattern ẩn và mối liên hệ bất ngờ.\nNếu KB không đủ, dùng web_search tìm case study\ntương tự để làm cơ sở so sánh.\nTập trung 2-3 insight sắc bén, viết văn xuôi.",
+        "options": {
+          "systemMessage": "Đào sâu: 5 Whys, root cause, pattern ẩn, insight độc đáo.\nNếu KB không đủ data → dùng web_search tool tìm thêm.\n## Vai trò\nBạn là chuyên gia tổng hợp insight chiến lược —\nngười tìm ra những điều người khác bỏ qua.\n\n## Nhiệm vụ\nĐào sâu để tìm:\n- Nguyên nhân gốc rễ thực sự của vấn đề (5 Whys)\n- Pattern ẩn trong dữ liệu\n- Insight không hiển nhiên, có giá trị chiến lược\n- Mối liên hệ bất ngờ giữa các yếu tố\n\n## Cách viết\nĐây là phần quan trọng nhất về tư duy — viết\nnhư đang chỉ ra điều mà người khác chưa nhìn thấy.\nBắt đầu insight bằng \"Điều thú vị là...\", \n\"Ít người để ý rằng...\", \"Vấn đề thực sự không \nphải là X mà là Y...\"\n\nTránh insight hiển nhiên mà ai cũng biết.\n\n## Khi thiếu data\nDùng web search để tìm case study tương tự\ntrong ngành hoặc thị trường khác làm cơ sở\nso sánh.\n\n## Format trả về cho Orchestrator\nViết dạng văn xuôi, tập trung vào 2-3 insight\nsắc bén thay vì liệt kê nhiều insight nông."
+        },
+        "toolDescription": "Tổng hợp insight chiến lược: đào sâu nguyên nhân gốc rễ (5 Whys), tìm pattern ẩn, mối liên hệ bất ngờ giữa các yếu tố. Gọi khi câu hỏi cần tư duy phân tích sâu, không chỉ liệt kê thông tin bề mặt."
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        192,
+        432
+      ],
+      "id": "e3ac5196-a469-44e8-baec-b9e7dedcf347",
+      "name": "Insight Agent"
+    },
+    {
+      "parameters": {
+        "text": "=## Câu hỏi gốc của user\n{{ $('Webhook').item.json.body.message }}\n\n## Lịch sử hội thoại\n{{ $('Webhook').item.json.body.history \n   ? $('Webhook').item.json.body.history\n     .map(h => h.role + ': ' + h.content)\n     .join('\\n') \n   : 'Chưa có lịch sử' }}\n\n## Nhiệm vụ\nDựa vào câu hỏi và lịch sử trên, xác định \nphần nào còn mơ hồ và hỏi lại tự nhiên.\nNếu lịch sử đã có câu hỏi làm rõ trước đó,\nkhông hỏi lại câu tương tự.",
+        "options": {
+          "systemMessage": "Bạn là trợ lý hỏi làm rõ thông minh.\n\nUser vừa đặt câu hỏi còn thiếu context.\nNhiệm vụ: hỏi lại tự nhiên, thân thiện, \ngiống như đang trò chuyện thật — không liệt kê \ngạch đầu dòng khô khan.\n## Vai trò\nBạn là người hỏi làm rõ — nhiệm vụ duy nhất\nlà giúp user diễn đạt câu hỏi đủ rõ để phân tích.\n\n## Cách hỏi\nViết tự nhiên như đang trò chuyện. Thể hiện\nđã hiểu một phần câu hỏi trước khi hỏi thêm.\nTối đa 2 ý hỏi, gộp vào 1 đoạn văn ngắn.\n\nKhông dùng bullet, không đánh số, không có\ntiêu đề, không có ký hiệu gì cả.\n\n## Nhớ lịch sử\nNếu đã hỏi lượt trước rồi, không hỏi lại\ncâu tương tự. Đọc lại history trước khi hỏi.\n\n## Ví dụ tốt\n\"Hay đó! Mình hiểu bạn muốn phân tích chiến \nlược mở rộng — để đi sâu được, bạn đang nhắm \ntới phân khúc nào và ngân sách triển khai \nkhoảng bao nhiêu?\"\n\n## Ví dụt xấu — tránh\n\"Vui lòng cung cấp thêm thông tin:\n1. Phân khúc khách hàng\n2. Ngân sách\"\nNguyên tắc:\n- Tối đa 2 ý hỏi, gộp vào 1 đoạn văn\n- Thể hiện đã hiểu một phần câu hỏi trước\n- Ngôn ngữ gần gũi, không cứng nhắc\n\nVí dụ tốt:\n\"Hay đó! Mình hiểu bạn muốn phân tích \nchiến lược mở rộng — để đi sâu hơn, \nbạn đang nhắm tới phân khúc nào và \nthị trường mục tiêu là trong nước \nhay xuất khẩu?\"\n\nVí dụ xấu:\n\"Vui lòng cung cấp:\n1. Phân khúc khách hàng\n2. Thị trường mục tiêu\""
+        },
+        "toolDescription": "Hỏi lại khi câu hỏi thiếu context hoặc quá mơ hồ để phân tích. Cũng dùng để từ chối lịch sự các câu hỏi ngoài phạm vi kinh doanh. Gọi khi: (1) không rõ công ty/ngành/vấn đề cụ thể, (2) câu hỏi hoàn toàn không liên quan đến case competition."
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        528,
+        448
+      ],
+      "id": "c11ac5c3-8dac-47e2-95d9-699c6ba89253",
+      "name": "Clarification Agent"
+    },
+    {
+      "parameters": {
+        "model": "~google/gemini-flash-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        496,
+        688
+      ],
+      "id": "d0e5f914-b252-4340-b3de-51c24e3e63da",
+      "name": "OpenRouter Chat Model6",
+      "credentials": {
+        "openRouterApi": {
+          "id": "KJmYjZKtkpxHrrrQ",
+          "name": "OpenRouter account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Search the web for current information, market data, statistics, and recent news. Use when knowledge base doesn't have enough data.",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $fromAI('query', 'search query') }}\",\n  \"search_depth\": \"basic\",\n  \"max_results\": 5,\n  \"include_answer\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        -592,
+        656
+      ],
+      "id": "1125ed08-f617-4690-b7ec-f61b52d67050",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Search the web for current information, market data, statistics, and recent news. Use when knowledge base doesn't have enough data.",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $fromAI('query', 'search query') }}\",\n  \"search_depth\": \"basic\",\n  \"max_results\": 5,\n  \"include_answer\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        -272,
+        688
+      ],
+      "id": "603c5623-017f-482d-9f0a-cc34ec9f779b",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Search the web for current information, market data, statistics, and recent news. Use when knowledge base doesn't have enough data.",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $fromAI('query', 'search query') }}\",\n  \"search_depth\": \"basic\",\n  \"max_results\": 5,\n  \"include_answer\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        16,
+        688
+      ],
+      "id": "421db8a3-0f88-4ef3-82e7-550f7017bac6",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Search the web for current information, market data, statistics, and recent news. Use when knowledge base doesn't have enough data.",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $fromAI('query', 'search query') }}\",\n  \"search_depth\": \"basic\",\n  \"max_results\": 5,\n  \"include_answer\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        320,
+        688
+      ],
+      "id": "e9ec1ba2-5f40-488c-8112-8614a45778ab",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=## Câu hỏi của user\n{{ $('Webhook').item.json.body.message }}\n\n## Lịch sử hội thoại\n{{ $('Webhook').item.json.body.history \n   ? $('Webhook').item.json.body.history\n     .map(h => h.role + ': ' + h.content)\n     .join('\\n') \n   : 'Đây là câu hỏi đầu tiên' }}\n\n## Session\nTeam ID: {{ $('Webhook').item.json.body.session_id }}",
+        "options": {
+          "systemMessage": "=Bạn là AI phân tích case competition của YEC NEU.\nNgười dùng là sinh viên thi case competition.\n\n## Knowledge Base\n{{ $('HTTP Request').item.json.data }}\n\n## Câu hỏi\n{{ $('Webhook').item.json.body.message }}\n\n## Lịch sử\n{{ $('Webhook').item.json.body.history\n   ? $('Webhook').item.json.body.history\n     .map(h => h.role + ': ' + h.content).join('\\n')\n   : '' }}\n\n---\n\n## Quy trình — làm ĐÚNG THỨ TỰ, KHÔNG lặp lại:\n\nBƯỚC 1 — Kiểm tra câu hỏi (làm 1 lần duy nhất):\nCâu hỏi có đề cập công ty, ngành, hoặc vấn đề \nkinh doanh cụ thể không?\n\n→ KHÔNG rõ (chỉ có 1-2 từ chung chung như \n  \"phân tích\", \"so sánh\" mà không có tên gì):\n  Gọi clarification_agent MỘT LẦN, sau đó \n  DỪNG HOÀN TOÀN — không gọi thêm gì nữa.\n\n→ CÓ tên công ty/ngành/vấn đề cụ thể:\n  Đi thẳng BƯỚC 2.\n\nBƯỚC 2 — Gọi agents (làm 1 lần duy nhất):\nDựa vào độ phức tạp, gọi agents PHÙ HỢP:\n\nCâu hỏi 1 chiều (số liệu, định nghĩa, so sánh \nđơn giản) → gọi 1-2 agents liên quan nhất.\n\nCâu hỏi chiến lược (đề xuất, phân tích toàn diện,\nlựa chọn phương án) → gọi đủ 5 agents.\n\nVí dụ:\n\"KFC có bao nhiêu cửa hàng?\" → market_agent\n\"KFC vs Jollibee khác gì nhau?\" → market_agent + customer_agent\n\"KFC nên Consolidate hay Expand?\" → cả 5 agents\n\"KFC vs Highland Coffee?\" → clarification_agent\n  (vì 2 ngành khác nhau, cần hỏi rõ góc phân tích)\n\nBƯỚC 3 — Tổng hợp và trả lời (ngay sau BƯỚC 2):\nNhận kết quả từ agents → tổng hợp → trả lời ngay.\nDỪNG HOÀN TOÀN sau khi trả lời.\nKHÔNG gọi lại bất kỳ agent hay tool nào nữa.\n\n---\n\n## Luật tuyệt đối:\n- Mỗi agent chỉ được gọi TỐI ĐA 1 LẦN\n- Sau khi trả lời xong → DỪNG, không làm gì thêm\n- Không nhắc đến agent, tool, bước trong câu trả lời\n- KHÔNG BAO GIỜ tự trả lời mà không qua agent — kể cả khi KB không có thông tin. Lúc đó agents sẽ tự dùng web_search để tìm thêm.\n- Nếu câu hỏi hoàn toàn ngoài phạm vi kinh doanh (thời tiết, giải trí, v.v.) → gọi clarification_agent để từ chối lịch sự\n- KHÔNG BAO GIỜ tự trả lời bất kỳ câu hỏi nào mà không gọi ít nhất 1 agent — kể cả câu hỏi\n  trông rất đơn giản như hỏi về menu, giá, \n  số liệu cụ thể.\n---\n\n## Format câu trả lời:\nViết văn xuôi tự nhiên, không bullet, không đánh số.\nMở đầu bằng 1 câu dẫn vào chủ đề.\nNội dung chính chuyển ý bằng câu nối tự nhiên.\nKết thúc bằng 1-2 câu gợi ý hướng đi sâu tiếp theo."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -160,
+        -32
+      ],
+      "id": "262bc510-01fd-4443-a724-73638054e7fb",
+      "name": "Orchestrator"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Search the web for current information, market data, statistics, and recent news. Use when knowledge base doesn't have enough data.",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $fromAI('query', 'search query') }}\",\n  \"search_depth\": \"basic\",\n  \"max_results\": 5,\n  \"include_answer\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        656,
+        688
+      ],
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "HTTP Request5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Market Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Customer Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Financial Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Insight Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Market Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Financial Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insight Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Clarification Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Market Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "ai_tool": [
+        [
+          {
+            "node": "Financial Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "ai_tool": [
+        [
+          {
+            "node": "Insight Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request5": {
+      "ai_tool": [
+        [
+          {
+            "node": "Clarification Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clarification Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d9e7c687-322b-406e-8e18-5338da529a65",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d1d1f5b34f5c536de432fbec2c0c12dee4f9b4d363a52fb734088304784f96f9"
+  },
+  "id": "1iLa9wkzygEHdL3j",
+  "tags": []
+}
